@@ -1,0 +1,15 @@
+{
+  "name": "invoicetotext",
+  "version": "1.0.0",
+  "description": "no desc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arijit",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/ai-form-recognizer": "^4.0.0",
+    "@azure/identity": "^3.1.3"
+  }
+}
