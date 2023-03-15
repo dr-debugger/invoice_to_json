@@ -3,6 +3,8 @@ const {
   DocumentAnalysisClient,
 } = require("@azure/ai-form-recognizer");
 const process = require("process");
+const fs = require("fs");
+const path = require("path");
 require("dotenv").config();
 
 const invoiceUrl =
@@ -36,7 +38,7 @@ const extractDataFromKeyValue = (keyValuePairs) => {
 
   const result = {
     data: extractedData,
-    accuracy: (overAllConfidence / total) * 100,
+    accuracy: ((overAllConfidence / total) * 100).toFixed(2),
   };
 
   return result;
@@ -46,7 +48,7 @@ const convertObjToSting = (obj) => {
   if (!Boolean(obj)) return "";
   let str = "";
   for (const property in obj) {
-    str += obj[property];
+    str += ` ${obj[property]}`;
   }
 
   return str;
@@ -89,7 +91,7 @@ const extractDataFromDocuments = (documents) => {
 
   const result = {
     data: extractedData,
-    accuracy: (overAllConfidence / total) * 100,
+    accuracy: ((overAllConfidence / total) * 100).toFixed(2),
   };
 
   return result;
@@ -97,6 +99,10 @@ const extractDataFromDocuments = (documents) => {
 
 const main = async (type) => {
   // throw new Error("manual error");
+  const root = path.dirname(require.main.filename);
+  const filepath = path.join(root, "sample-invoice.pdf");
+  const file = fs.createReadStream(filepath);
+
   const client = new DocumentAnalysisClient(
     endpoint,
     new AzureKeyCredential(key)
@@ -104,7 +110,7 @@ const main = async (type) => {
 
   const poller = await client.beginAnalyzeDocumentFromUrl(
     "prebuilt-invoice",
-    invoiceUrl
+    file
   );
 
   const { keyValuePairs, documents } = await poller.pollUntilDone();
