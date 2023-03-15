@@ -3,12 +3,13 @@ const {
   DocumentAnalysisClient,
 } = require("@azure/ai-form-recognizer");
 const process = require("process");
+require("dotenv").config();
 
 const invoiceUrl =
   "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-REST-api-samples/master/curl/form-recognizer/sample-invoice.pdf";
 
-const key = "";
-const endpoint = "";
+const key = process.env.API_KEY;
+const endpoint = process.env.API_ENDPOINT;
 
 const extractDataFromKeyValue = (keyValuePairs) => {
   let overAllConfidence = 0,
@@ -20,15 +21,16 @@ const extractDataFromKeyValue = (keyValuePairs) => {
     const key = keyValuePairs[i]?.key?.content,
       value = keyValuePairs[i]?.value?.content;
 
-    if (Boolean(key)) {
+    if (Boolean(key) && Boolean(value)) {
       extractedData.push({
-        [key]: value,
+        key,
+        value,
       });
-    }
 
-    if (keyValuePairs[i]?.confidence) {
-      overAllConfidence += keyValuePairs[i].confidence;
-      total++;
+      if (keyValuePairs[i]?.confidence) {
+        overAllConfidence += keyValuePairs[i].confidence;
+        total++;
+      }
     }
   }
 
@@ -64,20 +66,22 @@ const extractDataFromDocuments = (documents) => {
     if (Boolean(valueObj)) {
       if (stringType.includes(valueObj?.kind)) {
         extractedData.push({
-          [key]: valueObj?.value,
+          key,
+          value: valueObj?.value ? valueObj.value : "",
         });
       }
 
       if (objType.includes(valueObj?.kind)) {
         extractedData.push({
-          [key]: valueObj?.content
+          key,
+          value: valueObj?.content
             ? valueObj.content
             : convertObjToSting(valueObj.value),
         });
       }
 
       if (valueObj?.confidence) {
-        overAllConfidence += keyValuePairs[i].confidence;
+        overAllConfidence += valueObj.confidence;
         total++;
       }
     }
@@ -131,15 +135,13 @@ const main = async (type) => {
   });
 };
 
-main("FROM_KEY_VALUE")
-  .then((data) => console.log(data))
+main("DOCUMENTS")
+  .then((data) => {
+    // console.log(data);
+    console.log(".....****.....");
+    console.log(JSON.stringify(data));
+  })
   .catch((err) => {
     console.log(err);
     process.exit(1);
   });
-
-/**
- * fef0cc12cf034ec3a6a1a41a4b0041b9
-
-https://aisp-form-recognizer.cognitiveservices.azure.com/
- */
