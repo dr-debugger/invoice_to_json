@@ -3,7 +3,7 @@ convert invoice (pdf or image[jpg, png, jpeg]) to json;
 
 * Expected output:
 
-<code>
+```json
 {
   "status": true,
   "data": {
@@ -39,4 +39,4 @@ convert invoice (pdf or image[jpg, png, jpeg]) to json;
     "accuracy": 93.35
   }
 }
-</code>
+```
