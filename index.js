@@ -14,8 +14,8 @@ const key = process.env.API_KEY;
 const endpoint = process.env.API_ENDPOINT;
 
 const extractDataFromKeyValue = (keyValuePairs) => {
-  let overAllConfidence = 0,
-    total = 0;
+  let overAllConfidence = 0;
+  // total = 0;
 
   const extractedData = [];
 
@@ -31,14 +31,14 @@ const extractDataFromKeyValue = (keyValuePairs) => {
 
       if (keyValuePairs[i]?.confidence) {
         overAllConfidence += keyValuePairs[i].confidence;
-        total++;
+        // total++;
       }
     }
   }
 
   const result = {
     data: extractedData,
-    accuracy: ((overAllConfidence / total) * 100).toFixed(2),
+    accuracy: ((overAllConfidence / keyValuePairs.length) * 100).toFixed(2),
   };
 
   return result;
@@ -55,8 +55,8 @@ const convertObjToSting = (obj) => {
 };
 
 const extractDataFromDocuments = (documents) => {
-  let overAllConfidence = 0,
-    total = 0;
+  let overAllConfidence = 0;
+  // total = 0;
 
   const extractedData = [];
 
@@ -84,14 +84,17 @@ const extractDataFromDocuments = (documents) => {
 
       if (valueObj?.confidence) {
         overAllConfidence += valueObj.confidence;
-        total++;
+        // total++;
       }
     }
   }
 
   const result = {
     data: extractedData,
-    accuracy: ((overAllConfidence / total) * 100).toFixed(2),
+    accuracy: (
+      (overAllConfidence / Object.entries(documents).length) *
+      100
+    ).toFixed(2),
   };
 
   return result;
