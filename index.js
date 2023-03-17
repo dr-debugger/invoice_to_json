@@ -69,7 +69,7 @@ const extractDataFromDocuments = (documents) => {
       if (stringType.includes(valueObj?.kind)) {
         extractedData.push({
           key,
-          value: valueObj?.value ? valueObj.value : "",
+          value: valueObj?.content ? valueObj.content : "",
         });
       }
 
